@@ -1,17 +1,8 @@
-import React, {useState, createContext} from 'react';
-
-export const UserContext = createContext(null);
-
-interface UserInterface {
-  user_id: string;
-  provider: string
-}
+import React from 'react';
+import { AuthProvider } from './auth';
 
 const Store: React.FC = ({children}) => {
-  const [user, setUser] = useState<UserInterface>({user_id: '', provider: ''}); 
-  return <>
-    <UserContext.Provider value={{user, setUser}}>{children}</UserContext.Provider>
-  </>
+  return <AuthProvider>{children}</AuthProvider>
 }
 
 export default Store;
