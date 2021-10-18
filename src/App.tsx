@@ -3,12 +3,15 @@ import './App.css';
 
 import Store from './store';
 import Router from './router';
+import ThemeWrapper from './theme';
 
 function App() {
   return (
     <div className="App">
       <Store>
-        <Router />
+        <ThemeWrapper>
+          <Router />
+        </ThemeWrapper>
       </Store>
     </div>
   );
