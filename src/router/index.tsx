@@ -7,9 +7,8 @@ import AuthRoute from './AuthRoute';
 const Router: React.FC = () => {
   return (<BrowserRouter>
     <Switch>
-      <Route path='/' exact component={() => <div>Home</div>} />
+      <AuthRoute path='/' exact component={() => <Panel />} />
       <Route path='/signin' exact component={() => <SignIn />} />
-      <AuthRoute path='/panel' exact component={() => <Panel />} />
     </Switch>
   </BrowserRouter>)
 }
