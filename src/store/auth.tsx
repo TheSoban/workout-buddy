@@ -39,7 +39,7 @@ const useAuthState = () => {
   }
 
   const signinUsingGithub = () => {
-    window.location.href = ('http://thesoban.pl:4321/auth/github')
+    window.location.href = ('https://workout-buddy.thesoban.pl/api/auth/github')
   }
 
   const signout = () => {
