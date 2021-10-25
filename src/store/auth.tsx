@@ -23,6 +23,7 @@ export interface AuthContextData {
   user: AuthStructure;
   signinUsingLocal: () => void;
   signinUsingGithub: () => void;
+  signinUsingGoogle: () => void;
   signout: () => void;
 }
 
@@ -40,6 +41,10 @@ const useAuthState = () => {
 
   const signinUsingGithub = () => {
     window.location.href = ('https://workout-buddy.thesoban.pl/api/auth/github')
+  }
+
+  const signinUsingGoogle = () => {
+    window.location.href = ('https://workout-buddy.thesoban.pl/api/auth/google')
   }
 
   const signout = () => {
@@ -65,6 +70,7 @@ const useAuthState = () => {
     user,
     signinUsingLocal,
     signinUsingGithub,
+    signinUsingGoogle,
     signout
   }
 }
