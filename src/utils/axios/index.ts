@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: 'http://thesoban.pl:4321',
+  baseURL: 'https://workout-buddy.thesoban.pl/api',
   withCredentials: true
 });
 
