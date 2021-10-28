@@ -46,11 +46,11 @@ const useAuthState = () => {
   }
 
   const signinUsingGoogle = () => {
-    console.log("Google strategy")
+    window.location.href = ('https://workout-buddy.thesoban.pl/api/auth/google')
   }
 
   const signinUsingFacebook = () => {
-    window.location.href = ('https://workout-buddy.thesoban.pl/api/auth/google')
+    console.log('Facebook strategy')
   }
 
   const signout = () => {
