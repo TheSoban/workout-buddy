@@ -23,6 +23,8 @@ export interface AuthContextData {
   user: AuthStructure;
   signinUsingLocal: () => void;
   signinUsingGithub: () => void;
+  signinUsingGoogle: () => void;
+  signinUsingFacebook: () => void;
   signout: () => void;
 }
 
@@ -39,24 +41,31 @@ const useAuthState = () => {
   }
 
   const signinUsingGithub = () => {
-    window.location.href = ('http://thesoban.pl:4321/auth/github')
+    window.location.href = ('https://workout-buddy.thesoban.pl/api/auth/github')
+  }
+
+  const signinUsingGoogle = () => {
+    console.log("Google strategy")
+  }
+
+  const signinUsingFacebook = () => {
+    console.log('Facebook strategy')
   }
 
   const signout = () => {
-    setUser((s: AuthStructure) => ({...s, user_id: null, authenticated: false}) as AuthStructure);
+    setUser((s: AuthStructure) => ({...defaultUser}) as AuthStructure);
   }
 
   useEffect(() => {
-    (async function(){
-      try{
-        const response = await API.get('/getuser');
-        const data = response.data
-        console.log(response)
-        console.log(data)
-      }catch(e){
-        console.log(e);
-      }
-    })();
+    // Uncomment to use api info
+    // (async function(){
+    //   try{
+    //     const response = await API.get('/getuser');
+    //     console.log(response)
+    //   }catch(e){
+    //     console.log(e);
+    //   }
+    // })();
 
     return () => { console.log("Auth unmount")}
   }, []);
@@ -65,6 +74,8 @@ const useAuthState = () => {
     user,
     signinUsingLocal,
     signinUsingGithub,
+    signinUsingFacebook,
+    signinUsingGoogle,
     signout
   }
 }
