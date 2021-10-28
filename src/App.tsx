@@ -1,18 +1,17 @@
-import React from 'react';
-
 import Store from './store';
 import Router from './router';
 import ThemeWrapper from './theme';
+import AppContainer from './styled/AppContainer';
 
 function App() {
   return (
-    <div className="App">
-      <Store>
-        <ThemeWrapper>
+    <ThemeWrapper>
+      <AppContainer>
+        <Store>
           <Router />
-        </ThemeWrapper>
-      </Store>
-    </div>
+        </Store>
+      </AppContainer>
+    </ThemeWrapper>
   );
 }
 
