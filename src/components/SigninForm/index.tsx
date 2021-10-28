@@ -34,6 +34,7 @@ const TextField = ({label, ...props}: FieldProps) => {
 }
 
 const SigninForm: FC = () => {
+  // eslint-disable-next-line
   const {signinUsingLocal, signinUsingGithub, signinUsingGoogle, signinUsingFacebook} = useAuth();
 
   return <Formik
@@ -51,12 +52,12 @@ const SigninForm: FC = () => {
       }}
     >
       {
-        ({handleSubmit, isSubmitting}) => (
+        ({handleSubmit, isSubmitting, isValid, }) => (
           <StyledForm noValidate onSubmit={(e) => {e.preventDefault();handleSubmit(e)}}>
             <StyledH1>Zaloguj się</StyledH1>
             <TextField label="Adres e-mail" name="email" type="text" />
             <TextField label="Hasło" name="password" type="password" />
-            <StyledButton disabled={isSubmitting} type="submit">Zaloguj się</StyledButton>
+            <StyledButton disabled={ isSubmitting || !isValid} type="submit">Zaloguj się</StyledButton>
             <StyledDivider>lub kontynuuj z</StyledDivider>
             <StyledProviders>
               <StyledImg src={Google} alt="Google_Logo" onClick={signinUsingGoogle} />
