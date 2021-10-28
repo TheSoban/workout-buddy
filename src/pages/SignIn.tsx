@@ -1,16 +1,24 @@
 import React from 'react';
 import { Redirect } from 'react-router';
+import styled from 'styled-components';
 import SigninForm from '../components/SigninForm';
 import { useAuth } from '../store/auth';
 
+const Container = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const SignIn: React.FC = () => {
-  const {user, signinUsingGithub} = useAuth()
+  const {user} = useAuth()
   if(user.authenticated) return <Redirect to='panel' />
 
-  return <div>
-    <h1>Sign In</h1>
+  return <Container>
     <SigninForm />
-  </div>
+  </Container>
 }
 
 export default SignIn;
