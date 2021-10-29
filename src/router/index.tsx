@@ -9,6 +9,7 @@ const Router: React.FC = () => {
     <Switch>
       <AuthRoute path='/' exact component={() => <Panel />} />
       <Route path='/signin' exact component={() => <SignIn />} />
+      <Route path="*" component={() => <div>404 not found</div>} />
     </Switch>
   </BrowserRouter>)
 }
