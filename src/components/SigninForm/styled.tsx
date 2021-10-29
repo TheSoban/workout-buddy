@@ -118,9 +118,11 @@ export const StyledImg = styled.img`
   border: 1px solid #9fa9b7;
   border-radius: 14px;
   cursor: pointer;
+  transition: all 0.1s linear;
 
   &:hover {
     transform: scale(1.1);
+    box-shadow: 0px 0px 30px -7px rgba(66, 68, 90, 1);
   }
 `;
 
