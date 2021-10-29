@@ -5,12 +5,14 @@ import {
   StyledButton,
   StyledDivider,
   StyledError,
+  StyledForgotPasswordLink,
   StyledForm,
   StyledGroup,
   StyledH1,
   StyledImg,
   StyledInput,
-  StyledProviders
+  StyledProviders,
+  StyledSignupLink
 } from './styled';
 
 import Facebook from '../../assets/fb-logo.png';
@@ -57,6 +59,7 @@ const SigninForm: FC = () => {
             <StyledH1>Zaloguj się</StyledH1>
             <TextField label="Adres e-mail" name="email" type="text" />
             <TextField label="Hasło" name="password" type="password" />
+            <StyledForgotPasswordLink to="/reset-password">Zapomniałeś hasła?</StyledForgotPasswordLink>
             <StyledButton disabled={ isSubmitting || !isValid} type="submit">Zaloguj się</StyledButton>
             <StyledDivider>lub kontynuuj z</StyledDivider>
             <StyledProviders>
@@ -64,6 +67,7 @@ const SigninForm: FC = () => {
               <StyledImg src={Github} alt="Github_Logo" onClick={signinUsingGithub} />
               <StyledImg src={Facebook} alt="Facebook_Logo" onClick={signinUsingFacebook} />
             </StyledProviders>
+            <StyledSignupLink to="/signup">Masz konto? Zarejestruj się</StyledSignupLink>
           </StyledForm>
         )
       }

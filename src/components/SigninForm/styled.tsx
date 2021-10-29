@@ -1,5 +1,6 @@
 import { Form } from 'formik';
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components'
 
 export const StyledH1 = styled.h1`
@@ -123,6 +124,39 @@ export const StyledImg = styled.img`
   &:hover {
     transform: scale(1.1);
     box-shadow: 0px 0px 30px -7px rgba(66, 68, 90, 1);
+  }
+`;
+
+export const StyledForgotPasswordLink = styled(Link)`
+  display: inline-block;
+  width: 100%;
+  text-decoration: none;
+  color: #4460f1;
+  text-align: right;
+  margin-bottom: 12px;
+  opacity: 0.8;
+  transition: all .1s linear;
+
+  &:hover {
+    color: #2547f0;
+    opacity: 1;
+  }
+`;
+
+export const StyledSignupLink = styled(Link)`
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  text-decoration: none;
+  margin-top: 40px;
+  color: #4460f1;
+  opacity: 0.8;
+  transition: all .1s linear;
+
+  &:hover {
+    color: #2547f0;
+    opacity: 1;
   }
 `;
 
