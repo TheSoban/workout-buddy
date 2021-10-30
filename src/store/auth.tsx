@@ -50,7 +50,7 @@ const useAuthState = () => {
   }
 
   const signinUsingFacebook = () => {
-    console.log('Facebook strategy')
+    window.location.href = ('https://workout-buddy.thesoban.pl/api/auth/facebook')
   }
 
   const signout = () => {
