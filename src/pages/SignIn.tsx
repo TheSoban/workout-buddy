@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router';
+import { Redirect, useLocation } from 'react-router';
 import styled from 'styled-components';
 import SigninForm from '../components/SigninForm';
 import { useAuth } from '../store/auth';
@@ -13,9 +13,11 @@ const Container = styled.div`
 `;
 
 const SignIn: React.FC = () => {
+  const location = useLocation();
   const {user} = useAuth()
   if(user.authenticated) return <Redirect to='panel' />
-
+  const params = new URLSearchParams(location.search)
+  console.log(params.get("param"))
   return <Container>
     <SigninForm />
   </Container>
