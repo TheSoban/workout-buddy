@@ -1,17 +1,40 @@
 import React from 'react';
-import {BrowserRouter, Switch, Route} from 'react-router-dom'
-import Panel from '../pages/Panel';
-import SignIn from '../pages/SignIn';
-import AuthRoute from './AuthRoute';
+import {Navigate, Route, Routes, useLocation} from 'react-router-dom'
 
-const Router: React.FC = () => {
-  return (<BrowserRouter>
-    <Switch>
-      <AuthRoute path='/' exact component={() => <Panel />} />
-      <Route path='/signin' exact component={() => <SignIn />} />
-      <Route path="*" component={() => <div>404 not found</div>} />
-    </Switch>
-  </BrowserRouter>)
+import SignIn from '../pages/SignIn';
+import SignUp from '../pages/SignUp';
+import Basic404 from '../pages/Basic404';
+import Panel404 from '../pages/Panel404';
+import Panel from '../pages/Panel';
+
+import PanelLayout from '../components/PanelLayout';
+
+import { useAuth } from '../store/auth';
+import { BasicLayout } from '../components/Layout';
+
+const RequireAuth = ({children}) => {
+  let auth = useAuth();
+  let location = useLocation();
+
+  if (!auth.user.authenticated) return <Navigate to="/signin" state={{ from: location }} replace />
+  
+  return children
 }
 
-export default Router;
+const Router: React.FC = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<BasicLayout />}>
+        <Route path="signin" element={<SignIn />} />
+        <Route path="signup" element={<SignUp />} />
+        <Route path="*" element={<Basic404 />} />
+      </Route>
+      <Route path="panel" element={<RequireAuth><PanelLayout /></RequireAuth>}>
+        <Route index element={<Panel />} />
+        <Route path="*" element={<Panel404 />} />
+      </Route>
+    </Routes>
+  )
+}
+
+export default Router

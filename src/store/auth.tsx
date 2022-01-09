@@ -1,4 +1,5 @@
 import React, {useContext, createContext, useState, useEffect} from 'react';
+
 // eslint-disable-next-line
 import API from '../utils/axios';
 
@@ -9,6 +10,8 @@ export interface AuthStructure {
   provider: Provider;
   username: string | null;
   avatar_url: string | null;
+  disabled: boolean;
+  completed: boolean;
   authenticated: boolean;
 }
 
@@ -17,12 +20,14 @@ const defaultUser: AuthStructure = {
   provider: null,
   username: null,
   avatar_url: null,
+  disabled: null,
+  completed: null,
   authenticated: false
 }
 
 export interface AuthContextData {
   user: AuthStructure;
-  signinUsingLocal: () => void;
+  signinUsingLocal: (values: {email: string, password: string}) => void;
   signinUsingGithub: () => void;
   signinUsingGoogle: () => void;
   signinUsingFacebook: () => void;
@@ -37,8 +42,20 @@ const useAuthState = () => {
   const [user, setUser] = useState<AuthStructure>(defaultUser);
 
   // Auth handlers
-  const signinUsingLocal = () => {
-    setUser((s: AuthStructure) => ({...s, user_id: '123', authenticated: true, provider: 'local'}) as AuthStructure);
+  const signinUsingLocal = async (values: {email: string, password: string}) => {
+    try {
+      const res = await API.post("/auth/local/signin", {...values});
+      const serverData = res.data as {response: {message: string, provider: string}, status: string}
+
+      if(res.status === 200 && serverData.status === 'success'){
+        const res = await API.get("/user");
+        console.log(res)
+      }
+    } catch(exc) {
+      console.log(exc.response);
+    }
+
+    // setUser((s: AuthStructure) => ({...s, user_id: '123', username: values.email, authenticated: true, provider: 'local'}) as AuthStructure);
   }
 
   const signinUsingGithub = () => {
@@ -53,7 +70,7 @@ const useAuthState = () => {
     window.location.href = ('https://workout-buddy.thesoban.pl/api/auth/facebook')
   }
 
-  const signout = () => {
+  const signout = async () => {
     setUser((s: AuthStructure) => ({...defaultUser}) as AuthStructure);
   }
 

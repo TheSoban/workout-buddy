@@ -1,27 +1,56 @@
 import React from 'react';
-import { Redirect, useLocation } from 'react-router';
-import styled from 'styled-components';
+import { Navigate } from 'react-router';
 import SigninForm from '../components/SigninForm';
 import { useAuth } from '../store/auth';
 
-const Container = styled.div`
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+// Photo by Leon Ardho from Pexels
+import GymBackground from '../assets/gym-background.jpg';
+import Facebook from '../assets/fb-logo.png';
+import Github from '../assets/github-logo.png';
+import Google from '../assets/google-logo.png';
 
 const SignIn: React.FC = () => {
-  const location = useLocation();
   const {user} = useAuth()
-  if(user.authenticated) return <Redirect to='panel' />
-  const params = new URLSearchParams(location.search)
-  console.log(params.get("param"))
-  return <Container>
-    <SigninForm />
-  </Container>
+  if(user.authenticated) return <Navigate to='/panel' replace />
+  // const location = useLocation();
+  // const params = new URLSearchParams(location.search)
 
+  return (
+      <article className="grid" style={{padding: 0}}>
+        <div style={{padding: '1.75rem'}}>
+          <hgroup>
+            <h1>Logowanie</h1>
+            <h2>Twórz i rejestruj swoje postępy</h2>
+          </hgroup>
+          <SigninForm />
+          <h6 style={{textAlign: 'center'}}>lub kontynuuj z</h6>
+          <div className="grid">
+            <div>
+              <button type="button" className="contrast">
+                <img src={Google} alt="Google_Logo" style={{height: '30px'}} />
+              </button>
+            </div>
+            <div>
+              <button type="button" className="contrast">
+                <img src={Facebook} alt="Facebook_Logo" style={{height: '30px'}} />
+              </button>
+            </div>
+            <div>
+              <button type="button" className="contrast">
+                <img src={Github} alt="Github_Logo" style={{height: '30px'}} />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div style={
+          {
+            backgroundImage: `url(${GymBackground})`,
+            backgroundPosition: 'center',
+            backgroundSize: 'cover'
+          }
+          }></div>
+      </article>
+  )
 }
 
 export default SignIn;

@@ -1,17 +1,14 @@
 import Store from './store';
 import Router from './router';
-import ThemeWrapper from './theme';
-import AppContainer from './styled/AppContainer';
+import { BrowserRouter } from 'react-router-dom';
 
 function App() {
   return (
-    <ThemeWrapper>
-      <AppContainer>
+      <BrowserRouter>
         <Store>
           <Router />
         </Store>
-      </AppContainer>
-    </ThemeWrapper>
+      </BrowserRouter>
   );
 }
 
