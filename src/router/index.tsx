@@ -25,6 +25,7 @@ const Router: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<BasicLayout />}>
+        <Route index element={<div>TODO: Info page</div>} />
         <Route path="signin" element={<SignIn />} />
         <Route path="signup" element={<SignUp />} />
         <Route path="*" element={<Basic404 />} />

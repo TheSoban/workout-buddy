@@ -1,27 +1,49 @@
 import React, {useContext, createContext, useState, useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // eslint-disable-next-line
 import API from '../utils/axios';
 
-export type Provider = 'github' | 'facebook' | 'google' | 'local' | null;
+export type Provider = 'github' | 'facebook' | 'google' | 'local';
 
-export interface AuthStructure {
-  user_id: string | null;
-  provider: Provider;
+export interface APIUser {
+  user_id: number | null;
+  provider: Provider | null;
   username: string | null;
   avatar_url: string | null;
   disabled: boolean;
   completed: boolean;
+}
+
+export interface AuthStructure extends APIUser {
   authenticated: boolean;
 }
+
+export interface APIData<T> {
+  response: T,
+  status: string
+}
+
+export type APIUserData = APIData<
+  {
+    user: APIUser
+  }
+>;
+
+export type APILocalSigninData = APIData<
+  {
+    message: string,
+    provider: string
+  }
+>;
 
 const defaultUser: AuthStructure = {
   user_id: null,
   provider: null,
   username: null,
   avatar_url: null,
-  disabled: null,
-  completed: null,
+  disabled: false,
+  completed: false,
   authenticated: false
 }
 
@@ -40,22 +62,26 @@ export const authContext = createContext<AuthContextData>(null);
 // Remove simple state handling, switch to reducer approach
 const useAuthState = () => {
   const [user, setUser] = useState<AuthStructure>(defaultUser);
+  const [loading, setLoading] = useState(true)
+  const navigate = useNavigate();
 
   // Auth handlers
   const signinUsingLocal = async (values: {email: string, password: string}) => {
     try {
-      const res = await API.post("/auth/local/signin", {...values});
-      const serverData = res.data as {response: {message: string, provider: string}, status: string}
+      const res = await API.post<APILocalSigninData>("/auth/local/signin", {...values});
+      const serverData = res.data;
 
       if(res.status === 200 && serverData.status === 'success'){
-        const res = await API.get("/user");
-        console.log(res)
+        const res = await API.get<APIUserData>("/user");
+        if(res.status === 200 && res.data.status === 'success'){
+          const user = res.data.response.user;
+          setUser((s: AuthStructure) => ({...s, ...user, authenticated: true}));
+          navigate("/panel", {replace: true});
+        }
       }
     } catch(exc) {
       console.log(exc.response);
     }
-
-    // setUser((s: AuthStructure) => ({...s, user_id: '123', username: values.email, authenticated: true, provider: 'local'}) as AuthStructure);
   }
 
   const signinUsingGithub = () => {
@@ -71,25 +97,38 @@ const useAuthState = () => {
   }
 
   const signout = async () => {
-    setUser((s: AuthStructure) => ({...defaultUser}) as AuthStructure);
+    try {
+      const res = await API.get("/auth/logout");
+      if(res.status === 200) {
+        setUser(() => ({...defaultUser}) as AuthStructure);
+      }
+    }catch(exc) {
+      console.log(exc.response);
+    }
   }
 
   useEffect(() => {
-    // Uncomment to use api info
-    // (async function(){
-    //   try{
-    //     const response = await API.get('/getuser');
-    //     console.log(response)
-    //   }catch(e){
-    //     console.log(e);
-    //   }
-    // })();
+    (async function(){
+      setLoading(true);
+      try{
+        const res = await API.get<APIUserData>('/user');
+        if(res.status === 200 && res.data.status === 'success'){
+          const user = res.data.response.user;
+          setUser((s: AuthStructure) => ({...s, ...user, authenticated: true}));
+          setLoading(false)
+        }
+      }catch(e){
+        console.log(e);
+      }
+      setLoading(false);
+    })();
 
     return () => { console.log("Auth unmount")}
   }, []);
 
   return {
     user,
+    loading,
     signinUsingLocal,
     signinUsingGithub,
     signinUsingFacebook,
@@ -102,5 +141,5 @@ export const useAuth = () => useContext(authContext);
 
 export const AuthProvider: React.FC = ({children}) => {
   const data = useAuthState();
-  return (<authContext.Provider value={data}>{children}</authContext.Provider>)
+  return (<authContext.Provider value={data}>{data.loading ? <div>loading...</div> : children}</authContext.Provider>)
 }
