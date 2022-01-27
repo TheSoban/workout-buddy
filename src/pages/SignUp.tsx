@@ -3,7 +3,7 @@ import { Navigate} from 'react-router';
 import { useAuth } from '../store/auth';
 
 import GymBackground from '../assets/gym-background.jpg';
-import SignupForm from '../components/SignupForm';
+import SignupForm from '../components/forms/SignupForm';
 
 const SignUp: React.FC = () => {
   const {user} = useAuth()

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router';
-import SigninForm from '../components/SigninForm';
+import SigninForm from '../components/forms/SigninForm';
 import { useAuth } from '../store/auth';
 
 // Photo by Leon Ardho from Pexels

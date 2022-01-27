@@ -4,15 +4,18 @@ import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line
 import API from '../utils/axios';
 
-export type Provider = 'github' | 'facebook' | 'google' | 'local';
+export type TProvider = 'github' | 'facebook' | 'google' | 'local';
+
+export type TRole = "standard" | "moderator" | "admin";
 
 export interface APIUser {
   user_id: number | null;
-  provider: Provider | null;
+  provider: TProvider | null;
   username: string | null;
   avatar_url: string | null;
   disabled: boolean;
   completed: boolean;
+  role: TRole;
 }
 
 export interface AuthStructure extends APIUser {
@@ -44,6 +47,7 @@ const defaultUser: AuthStructure = {
   avatar_url: null,
   disabled: false,
   completed: false,
+  role: "standard",
   authenticated: false
 }
 
@@ -98,7 +102,7 @@ const useAuthState = () => {
 
   const signout = async () => {
     try {
-      const res = await API.get("/auth/logout");
+      const res = await API.get("/auth/signout");
       if(res.status === 200) {
         setUser(() => ({...defaultUser}) as AuthStructure);
       }

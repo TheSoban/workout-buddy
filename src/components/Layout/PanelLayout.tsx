@@ -1,14 +1,11 @@
 import { Outlet } from "react-router-dom";
+import { PanelNavbar } from "../Navbar";
 
-
-const PanelLayout = () => {
+export const PanelLayout = () => {
   return <>
-    <nav>sss</nav>
+    <PanelNavbar />
     <main className="container">
       <Outlet />
     </main>
-    <footer>sss</footer>
   </>
 }
-
-export default PanelLayout;
