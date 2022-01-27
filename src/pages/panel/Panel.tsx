@@ -1,9 +1,8 @@
 import React from 'react';
+import { Navigate } from 'react-router-dom';
 
 const Panel: React.FC = () => {
-  return <div>
-    <h1>You are authenticated!!!</h1>
-  </div>
+  return <Navigate to="exercises" replace />
 }
 
 export default Panel;
