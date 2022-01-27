@@ -10,7 +10,7 @@ import Github from '../assets/github-logo.png';
 import Google from '../assets/google-logo.png';
 
 const SignIn: React.FC = () => {
-  const {user} = useAuth()
+  const {user, signinUsingFacebook, signinUsingGithub, signinUsingGoogle} = useAuth()
   if(user.authenticated) return <Navigate to='/panel' replace />
   // const location = useLocation();
   // const params = new URLSearchParams(location.search)
@@ -26,17 +26,17 @@ const SignIn: React.FC = () => {
           <h6 style={{textAlign: 'center'}}>lub kontynuuj z</h6>
           <div className="grid">
             <div>
-              <button type="button" className="contrast">
+              <button type="button" className="contrast" onClick={() => signinUsingGoogle()}>
                 <img src={Google} alt="Google_Logo" style={{height: '30px'}} />
               </button>
             </div>
             <div>
-              <button type="button" className="contrast">
+              <button type="button" className="contrast"  onClick={() => signinUsingFacebook()}>
                 <img src={Facebook} alt="Facebook_Logo" style={{height: '30px'}} />
               </button>
             </div>
             <div>
-              <button type="button" className="contrast">
+              <button type="button" className="contrast"  onClick={() => signinUsingGithub()}>
                 <img src={Github} alt="Github_Logo" style={{height: '30px'}} />
               </button>
             </div>

@@ -10,7 +10,7 @@ const SigninForm: FC = () => {
 
   return <Formik
       initialValues={{
-        email: 'mod@mod.com',
+        email: '',
         password: ''  
       }}
       validationSchema={Yup.object({
