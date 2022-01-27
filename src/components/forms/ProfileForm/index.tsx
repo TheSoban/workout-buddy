@@ -5,6 +5,7 @@ import API from '../../../utils/axios';
 import DateField from '../FormComponents/DateField';
 import NumberField from '../FormComponents/NumberField';
 import SelectField from '../FormComponents/SelectField';
+import { useNavigate } from 'react-router-dom';
 
 export interface IProfileFormProps {
   dateOfBirth: string;
@@ -22,6 +23,7 @@ const options = [
 ]
 
 const ProfileForm: FC<IProfileFormProps> = ({dateOfBirth, height, sex, setDateOfBirth, setHeight, setSex}) => {
+  const navigate = useNavigate()
   return <Formik
       initialValues={{
         dateOfBirth,
@@ -41,6 +43,7 @@ const ProfileForm: FC<IProfileFormProps> = ({dateOfBirth, height, sex, setDateOf
           setHeight(height);
           setSex(sex);
           formikHelpers.resetForm({values: {dateOfBirth, height, sex}})
+          navigate('/panel', {replace: true});
         } catch (exc) {
           console.log(exc.response)
         }
