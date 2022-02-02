@@ -37,7 +37,7 @@ const Logs = () => {
   if(loading) return <div>Loading...</div>
 
   return <div>
-    <h1>Zarządzanie schematami treningów</h1>
+    <h1>Zarządzanie rejestrami treningów</h1>
     <button onClick={() => navigate('new')} className="outline contrast">Stwórz nowy rejestr</button>
     <fieldset>
       <table>
@@ -57,8 +57,8 @@ const Logs = () => {
             ? logs.map(log => (
               <tr key={log.log_id}>
                 <th>{log.name}</th>
-                <th>{log.createdAt}</th>
-                <th>{log.updatedAt}</th>
+                <th>{new Date(log.createdAt).toISOString().split("T")[0]}</th>
+                <th>{new Date(log.updatedAt).toISOString().split("T")[0]}</th>
                 <th><button onClick={() => navigate(`${log.log_id}`)} style={{marginBottom: '0'}} className="outline">Podgląd</button></th>
                 <th><button onClick={() => navigate(`edit/${log.log_id}`)} style={{marginBottom: '0'}} className="outline">Edytuj</button></th>
                 <th><button onClick={() => deleteItem(log.log_id)} style={{marginBottom: '0'}} className="outline contrast">Usuń</button></th>

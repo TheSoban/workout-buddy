@@ -61,6 +61,8 @@ const WorkoutLogEditForm: FC<IWorkoutLogFormProps> = ({initialData}) => {
     }
   })
 
+  const exercises_data = exercises.map(block => ({exercise_id: block[0].exercise_id}))
+
   const initialValues: IWorkoutLogFormData = {
     name: initialData.name,
     date: new Date(initialData.date).toISOString().split("T")[0],
@@ -108,9 +110,9 @@ const WorkoutLogEditForm: FC<IWorkoutLogFormProps> = ({initialData}) => {
             <FieldArray name="exercises_logs" render={arrayHelpers => {
               return values.exercises_logs.map(((exercise_logs, idx) => (
                 <article key={idx+'-exercise'}>
-                  <h3>{initialData.set_logs[idx].exercise.name}</h3>
+                  <h3>{initialData.set_logs[exercises.slice(0, idx).map(s => s.length).reduce((a,b) => a+b, 0)].exercise.name}</h3>
                   <button type="button" onClick={() => arrayHelpers.replace(idx, ([...exercise_logs, {
-                    exercise_id: initialData.set_logs[idx].exercise.exercise_id,
+                    exercise_id: exercises_data[idx].exercise_id,
                     order: exercise_logs.length + 1,
                     repetitions: 0,
                     value: 0,

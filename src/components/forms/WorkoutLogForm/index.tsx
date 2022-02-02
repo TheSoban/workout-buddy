@@ -33,7 +33,7 @@ const WorkoutLogForm: FC<IWorkoutLogFormProps> = ({initialData}) => {
   const initialValues: IWorkoutLogFormData = {
     name: '',
     date: '',
-    exercises_logs: initialData.ordered_exercises.map(exercise => ([]))
+    exercises_logs: initialData.ordered_exercises.sort((a,b) => a.order-b.order).map(exercise => ([]))
   }
 
   return <Formik<IWorkoutLogFormData>

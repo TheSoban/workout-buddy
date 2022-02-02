@@ -28,7 +28,7 @@ const BlueprintsEdit = () => {
 
   return blueprint && <div>
     <h1>Edytuj schemat treningu</h1>
-    <BlueprintForm update={true} initialData={{color: '#ffffff', name: blueprint.name, description: blueprint.description, ordered_exercises: blueprint.ordered_exercises.map(({exercise_id, exercise: {name}}) => ({exercise_id, name}))}} />;
+      <BlueprintForm update={true} initialData={{color: blueprint.color, name: blueprint.name, description: blueprint.description, ordered_exercises: blueprint.ordered_exercises.map(({exercise_id, exercise: {name}}) => ({exercise_id, name}))}} />
     </div>
 };
 
