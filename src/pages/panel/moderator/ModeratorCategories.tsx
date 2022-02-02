@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ICategory } from '../../../typescript/interfaces';
 import API from '../../../utils/axios';
+import { handleNotificationException, handleNotificationResponse } from '../../../utils/notifications';
 
 const ModeratorCategories = () => {
   const [loading, setLoading] = useState(true);
@@ -30,33 +31,33 @@ const ModeratorCategories = () => {
   const updateItem = async () => {
     setUpdating(true);
     try {
-      await API.post(`/category/${id}/update`, {name: value});
-      alert("zaktualizowano element")
+      const res = await API.post(`/exercise-category/${id}/update`, {name: value});
+      handleNotificationResponse(res);
       await loadItems();
     } catch (exc) {
-      console.log(exc.response);
+      handleNotificationException(exc);
     }
     setUpdating(false)
   }
 
   const deleteItem = async (id: number) => {
     try {
-      await API.post(`/category/${id}/delete`);
-      alert(`Usunięto element o id ${id}`);
+      const res = await API.post(`/exercise-category/${id}/delete`);
+      handleNotificationResponse(res);
       await loadItems();
     } catch (exc) {
-      console.log(exc)
+      handleNotificationException(exc)
     }
   }
 
   const addItem = async () => {
     setUpdating(true)
     try {
-      await API.post(`/category`, {name: value});
-      alert(`Dodano element o nazwie ${value}`);
+      const res = await API.post(`/exercise-category`, {name: value});
+      handleNotificationResponse(res)
       await loadItems();
     } catch (exc) {
-      console.log(exc)
+      handleNotificationException(exc)
     }
     setUpdating(false)
   }
@@ -97,7 +98,7 @@ const ModeratorCategories = () => {
             Nazwa
             <input type="text" name="name" value={value} onChange={e => {e.preventDefault(); setValue(e.target.value)}} />
           </label>
-          <button disabled={!value || updating} aria-busy={updating} onClick={e => {e.preventDefault(); newElement ? addItem(): updateItem()}}>{newElement ? "Dodaj" : "Zaktualizuj"}</button>
+          <button disabled={!value || updating} aria-busy={updating} onClick={async (e) => {e.preventDefault(); newElement ? await addItem(): await updateItem()}}>{newElement ? "Dodaj" : "Zaktualizuj"}</button>
         </div>
         <footer>
           <a href="#confirm"

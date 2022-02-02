@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { IMuscle } from '../../../typescript/interfaces';
 import API from '../../../utils/axios';
+import { handleNotificationException, handleNotificationResponse } from '../../../utils/notifications';
 
 const ModeratorMuscles = () => {
   const [loading, setLoading] = useState(true);
@@ -17,7 +18,7 @@ const ModeratorMuscles = () => {
         const res = await API.get<any>('/muscle');
         setMuscles(res.data.response.muscles as IMuscle[]);
       } catch(exc) {
-        console.log(exc?.response)
+        handleNotificationException(exc);
       }
       setLoading(true);
   }
@@ -30,33 +31,33 @@ const ModeratorMuscles = () => {
   const updateItem = async () => {
     setUpdating(true);
     try {
-      await API.post(`/muscle/${id}/update`, {name: value});
-      alert("zaktualizowano element")
+      const res = await API.post(`/muscle/${id}/update`, {name: value});
+      handleNotificationResponse(res);
       await loadItems();
     } catch (exc) {
-      console.log(exc.response);
+      handleNotificationException(exc);
     }
     setUpdating(false)
   }
 
   const deleteItem = async (id: number) => {
     try {
-      await API.post(`/muscle/${id}/delete`);
-      alert(`Usunięto element o id ${id}`);
+      const res = await API.post(`/muscle/${id}/delete`);
+      handleNotificationResponse(res);
       await loadItems();
     } catch (exc) {
-      console.log(exc)
+      handleNotificationException(exc);
     }
   }
 
   const addItem = async () => {
     setUpdating(true)
     try {
-      await API.post(`/muscle`, {name: value});
-      alert(`Dodano element o nazwie ${value}`);
+      const res = await API.post(`/muscle`, {name: value});
+      handleNotificationResponse(res);
       await loadItems();
     } catch (exc) {
-      console.log(exc)
+      handleNotificationException(exc);
     }
     setUpdating(false)
   }

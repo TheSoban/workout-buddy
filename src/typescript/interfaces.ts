@@ -14,6 +14,7 @@ export interface IExerciseSearch extends ITimeStamps {
 
 export interface IComment extends ITimeStamps {
   author_id: number;
+  author: string;
   comment_id: number;
   content: string;
   exercise_id: number;
@@ -85,4 +86,21 @@ export interface IBlueprint extends ITimeStamps {
   description: string;
   color: string;
   ordered_exercises: IOrderedExercise[];
+}
+
+export interface ISetLog {
+  set_id: number;
+  exercise: IExercise;
+  exercise_id: number;
+  order: number;
+  repetitions: number;
+  value: number;
+  unit: "kg" | "lbs";
+}
+
+export interface IWorkoutLog extends ITimeStamps {
+  log_id: number;
+  name: string;
+  date: string;
+  set_logs: ISetLog[];
 }

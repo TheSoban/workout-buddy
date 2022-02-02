@@ -13,7 +13,7 @@ function CheckboxGroup({ name, label, children }: Props) {
   const [field, meta, helpers] = useField<string[]>(name);
   return (
     <CheckboxProvider value={{ field, helpers, meta }}>
-      <details>
+      <details open>
         <summary>{label}</summary>
         <div style={{gridTemplateColumns: 'repeat(3, 1fr)'}} className="grid" role="group" aria-labelledby="categories-group">
           {children}

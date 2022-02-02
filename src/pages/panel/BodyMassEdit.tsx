@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import BodyMassForm from '../../components/forms/BodyMassForm';
 import { IBodyMeasurement } from '../../typescript/interfaces';
 import API from '../../utils/axios';
+import { handleNotificationException } from '../../utils/notifications';
 
 const BodyMassEdit = () => {
   const [loading, setLoading] = useState(true);
@@ -14,14 +15,13 @@ const BodyMassEdit = () => {
     (async () => {
       try {
         const res = await API.get<any>(`/user/body-measurement/${params.measurementId}`);
-        console.log(res)
         setMeasurement(res.data.response.measurement);
       } catch (exc) {
-        console.log(exc.response)
+        handleNotificationException(exc);
       }
       setLoading(false);
     })()
-  }, [])
+  }, [params.measurementId])
 
   if (loading) return <div>Loading...</div>
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IBlueprint } from '../../typescript/interfaces';
 import API from '../../utils/axios';
+import { handleNotificationException, handleNotificationResponse } from '../../utils/notifications';
 
 const Blueprints = () => {
   const [loading, setLoading] = useState(true);
@@ -14,18 +15,18 @@ const Blueprints = () => {
         const res = await API.get<any>('/user/workout-blueprint');
         setBlueprints(res.data.response.blueprints)
       } catch (exc) {
-        console.log(exc.response);
+        handleNotificationException(exc);
       }
       setLoading(false);
   }
 
   const deleteItem = async (id: number) => {
     try {
-      await API.post(`/user/workout-blueprint/${id}/delete`)
-      alert("Usunięto");
+      const res = await API.post(`/user/workout-blueprint/${id}/delete`)
+      handleNotificationResponse(res);
       await loadItems();
     } catch (exc) {
-      console.log(exc.response)
+      handleNotificationException(exc);
     }
   }
 
@@ -44,6 +45,7 @@ const Blueprints = () => {
           <tr>
             <th>Nazwa</th>
             <th>Opis</th>
+            <th>Kolor</th>
             <th>Liczba ćwiczeń</th>
             <th>Edytuj</th>
             <th>Usuń</th>
@@ -56,6 +58,7 @@ const Blueprints = () => {
               <tr key={blueprint.blueprint_id}>
                 <th>{blueprint.name}</th>
                 <th>{blueprint.description}</th>
+                <th><input style={{margin: '0'}} disabled type="color" value={blueprint.color} /></th>
                 <th>{blueprint.ordered_exercises.length}</th>
                 <th><button onClick={() => navigate(`edit/${blueprint.blueprint_id}`)} style={{marginBottom: '0'}} className="outline">Edytuj</button></th>
                 <th><button onClick={() => deleteItem(blueprint.blueprint_id)} style={{marginBottom: '0'}} className="outline contrast">Usuń</button></th>

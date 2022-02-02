@@ -4,8 +4,12 @@ import * as Yup from 'yup'
 
 import TextField from '../FormComponents/TextField';
 import API from '../../../utils/axios';
+import { handleNotificationException, handleNotificationResponse } from '../../../utils/notifications';
+import { useNavigate } from 'react-router-dom';
 
 const SignupForm: FC = () => {
+  const navigate = useNavigate();
+
   return <Formik
       initialValues={{
         username: '',
@@ -18,12 +22,12 @@ const SignupForm: FC = () => {
         password: Yup.string().required("Hasło jest wymagane").min(6, "Musi mieć minimum 6 znaków")
       })}
       onSubmit={async (values) => {
-        // register user to db
         try {
           const res = await API.post('/auth/local/signup', {...values});
-          console.log(res)
+          handleNotificationResponse(res)
+          navigate('/signin', {replace: true})
         } catch(exc) {
-          console.log(exc.response)
+          handleNotificationException(exc)
         }
       }}
     >

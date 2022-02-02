@@ -30,6 +30,10 @@ import BodyMassEdit from '../pages/panel/BodyMassEdit';
 import Blueprints from '../pages/panel/Blueprints';
 import BlueprintsNew from '../pages/panel/BlueprintsNew';
 import BlueprintsEdit from '../pages/panel/BlueprintsEdit';
+import Logs from '../pages/panel/Logs';
+import LogsNew from '../pages/panel/LogsNew';
+import LogDetails from '../pages/panel/LogDetails';
+import LogEdit from '../pages/panel/LogEdit';
 
 const RequireAuth = ({children}) => {
   const auth = useAuth();
@@ -74,7 +78,10 @@ const Router: React.FC = () => {
       </Route>
       <Route path="panel" element={<RequireAuth><PanelLayout /></RequireAuth>}>
         <Route index             element={<Panel />} />
-        <Route path="logs"       element={<Panel />} />
+        <Route path="logs"       element={<Logs />} />
+        <Route path="logs/new"       element={<LogsNew />} />
+        <Route path="logs/:logId"       element={<LogDetails />} />
+        <Route path="logs/edit/:logId"       element={<LogEdit />} />
         <Route path="blueprints" element={<Blueprints />} />
         <Route path="blueprints/new"  element={<BlueprintsNew />} />
         <Route path="blueprints/edit/:blueprintId"  element={<BlueprintsEdit />} />

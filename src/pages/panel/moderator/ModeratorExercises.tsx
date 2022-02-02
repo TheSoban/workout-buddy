@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ExerciseSearchForm from '../../../components/forms/ExerciseSearchForm';
 import { IExerciseSearch } from '../../../typescript/interfaces';
 import API from '../../../utils/axios';
+import { handleNotificationException, handleNotificationResponse } from '../../../utils/notifications';
 
 const ModeratorExercises = () => {
   const [exercises, setExercises] = useState<IExerciseSearch[]>([])
@@ -10,11 +11,11 @@ const ModeratorExercises = () => {
 
   const deleteItem = async (id: number) => {
     try {
-      await API.post(`/exercise/${id}/delete`);
+      const res = await API.post(`/exercise/${id}/delete`);
       setExercises(s => s.filter(x => x.exercise_id !== id))
-      alert(`Usunięto element o id ${id}`);
+      handleNotificationResponse(res);
     } catch (exc) {
-      console.log(exc)
+      handleNotificationException(exc);
     }
   }
 

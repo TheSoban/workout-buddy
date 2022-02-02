@@ -1,8 +1,9 @@
-import React, {useContext, createContext, useState, useEffect} from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useContext, createContext, useState, useEffect} from 'react';
+import {NotificationManager} from 'react-notifications'
 
 // eslint-disable-next-line
 import API from '../utils/axios';
+import { handleNotificationException, handleNotificationResponse } from '../utils/notifications';
 
 export type TProvider = 'github' | 'facebook' | 'google' | 'local';
 
@@ -58,6 +59,7 @@ export interface AuthContextData {
   signinUsingGoogle: () => void;
   signinUsingFacebook: () => void;
   signout: () => void;
+  setCompleted: () => void;
 }
 
 export const authContext = createContext<AuthContextData>(null);
@@ -67,24 +69,24 @@ export const authContext = createContext<AuthContextData>(null);
 const useAuthState = () => {
   const [user, setUser] = useState<AuthStructure>(defaultUser);
   const [loading, setLoading] = useState(true)
-  const navigate = useNavigate();
 
   // Auth handlers
   const signinUsingLocal = async (values: {email: string, password: string}) => {
     try {
       const res = await API.post<APILocalSigninData>("/auth/local/signin", {...values});
+      console.log(res)
       const serverData = res.data;
-
+      console.log(serverData)
       if(res.status === 200 && serverData.status === 'success'){
-        const res = await API.get<APIUserData>("/user");
-        if(res.status === 200 && res.data.status === 'success'){
-          const user = res.data.response.user;
+        const res2 = await API.get<APIUserData>("/user");
+        if(res2.status === 200 && res2.data.status === 'success'){
+          const user = res2.data.response.user;
           setUser((s: AuthStructure) => ({...s, ...user, authenticated: true}));
-          navigate("/panel", {replace: true});
+          handleNotificationResponse(res);
         }
       }
     } catch(exc) {
-      console.log(exc.response);
+      handleNotificationException(exc);
     }
   }
 
@@ -104,12 +106,15 @@ const useAuthState = () => {
     try {
       const res = await API.get("/auth/signout");
       if(res.status === 200) {
+        handleNotificationResponse(res);
         setUser(() => ({...defaultUser}) as AuthStructure);
       }
     }catch(exc) {
-      console.log(exc.response);
+      handleNotificationException(exc);
     }
   }
+
+  const setCompleted = () => setUser(s => ({...s, completed: true}))
 
   useEffect(() => {
     (async function(){
@@ -118,11 +123,12 @@ const useAuthState = () => {
         const res = await API.get<APIUserData>('/user');
         if(res.status === 200 && res.data.status === 'success'){
           const user = res.data.response.user;
+          NotificationManager.info('Zalogowano ponownie');
           setUser((s: AuthStructure) => ({...s, ...user, authenticated: true}));
           setLoading(false)
         }
       }catch(e){
-        console.log(e);
+        NotificationManager.info('Użytkownik nie jest zalogowany');
       }
       setLoading(false);
     })();
@@ -137,7 +143,8 @@ const useAuthState = () => {
     signinUsingGithub,
     signinUsingFacebook,
     signinUsingGoogle,
-    signout
+    signout,
+    setCompleted
   }
 }
 

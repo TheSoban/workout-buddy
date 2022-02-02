@@ -25,7 +25,7 @@ const SigninForm: FC = () => {
         ({handleSubmit, isSubmitting, isValid, dirty }) => (
           <Form noValidate onSubmit={(e) => {e.preventDefault();handleSubmit(e)}}>
             <TextField label="Adres e-mail" name="email" type="text" />
-            <TextField label="Hasło" name="password" type="password" />
+            <TextField label="Hasło" name="password" type="text" />
             <button type="submit" disabled={!(isValid && dirty)} aria-busy={isSubmitting} >Zaloguj się</button>
           </Form>
         )

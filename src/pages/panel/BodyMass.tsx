@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IBodyMeasurement } from '../../typescript/interfaces';
 import API from '../../utils/axios';
+import { handleNotificationException, handleNotificationResponse } from '../../utils/notifications';
 
 const BodyMass = () => {
   const [loading, setLoading] = useState(true);
@@ -14,18 +15,18 @@ const BodyMass = () => {
       const res = await API.get<any>('/user/body-measurement');
       setMeasurements(res.data.response.measurements);
     } catch (exc) {
-      console.log(exc.response)
+      handleNotificationException(exc);
     }
     setLoading(false);
   }
 
   const deleteMeasurement = async (id: number) => {
     try {
-      await API.post(`/user/body-measurement/${id}/delete`);
+      const res = await API.post(`/user/body-measurement/${id}/delete`);
+      handleNotificationResponse(res);
       await loadItems();
-      alert('Usunięto wpis');
     } catch (exc) {
-      console.log(exc.response);
+      handleNotificationException(exc);
     }
   }
 
@@ -35,7 +36,7 @@ const BodyMass = () => {
       const BMI = res.data.response.BMI;
       alert(`Obliczone BMI: ${BMI}`);
     } catch (exc) {
-      console.log(exc.response);
+      handleNotificationException(exc);
     }
   }
 

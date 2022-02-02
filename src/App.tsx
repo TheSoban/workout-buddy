@@ -6,8 +6,8 @@ import {NotificationContainer} from 'react-notifications'
 function App() {
   return (
       <BrowserRouter>
+        <NotificationContainer />
         <Store>
-          <NotificationContainer />
           <Router />
         </Store>
       </BrowserRouter>

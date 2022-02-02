@@ -4,11 +4,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 import { IExercise } from '../../../typescript/interfaces';
 import API from '../../../utils/axios';
+import { handleNotificationException, handleNotificationResponse } from '../../../utils/notifications';
+import ColorField from '../FormComponents/ColorField';
 import TextField from '../FormComponents/TextField';
 
 export interface IBlueprintFormData {
   name: string;
   description: string;
+  color: string,
   ordered_exercises: {
     exercise_id: number;
     name: string;
@@ -32,7 +35,7 @@ const BlueprintForm: FC<IBlueprintFormProps> = ({initialData, update}) => {
       const res = await API.get<any>('/exercise', {params: {name: value}})
       setSearchedExercises(res.data.response.exercises);
     } catch (exc) {
-      console.log(exc.response);
+      handleNotificationException(exc);
     }
   }
 
@@ -48,6 +51,7 @@ const BlueprintForm: FC<IBlueprintFormProps> = ({initialData, update}) => {
         initialData ? {...initialData} : {
           name: '',
           description: '',
+          color: '#ffffff',
           ordered_exercises: []
         }
       }
@@ -59,16 +63,16 @@ const BlueprintForm: FC<IBlueprintFormProps> = ({initialData, update}) => {
       onSubmit={async (values) => {
         try {
           if(update) {
-            await API.post(`/user/workout-blueprint/${params.blueprintId}/update`,{name: values.name, description: values.description, color: 'blue', exercises: values.ordered_exercises.map(x => x.exercise_id)})
-            alert("Nadpisano blueprint");
+            const res = await API.post(`/user/workout-blueprint/${params.blueprintId}/update`,{name: values.name, description: values.description, color: values.color, exercises: values.ordered_exercises.map(x => x.exercise_id)})
+            handleNotificationResponse(res)
             navigate('/panel/blueprints')
           } else {
-            await API.post('/user/workout-blueprint',{name: values.name, description: values.description, color: 'blue', exercises: values.ordered_exercises.map(x => x.exercise_id)})
-            alert("Utworzono blueprint");
+            const res = await API.post('/user/workout-blueprint',{name: values.name, description: values.description, color: values.color, exercises: values.ordered_exercises.map(x => x.exercise_id)})
+            handleNotificationResponse(res);
             navigate('/panel/blueprints')
           }
         } catch (exc) {
-          console.log(exc);
+          handleNotificationException(exc);
         }
       }}
     >
@@ -79,6 +83,7 @@ const BlueprintForm: FC<IBlueprintFormProps> = ({initialData, update}) => {
               <h3>Informacje</h3>
               <TextField label='Nazwa' name="name" />
               <TextField label="Opis" name="description" />
+              <ColorField label="Kolor" name="color" />
             </article>
             <article>
               <h3>Ćwiczenia</h3>

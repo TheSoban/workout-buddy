@@ -1,6 +1,6 @@
 import { FieldHookConfig, useField } from "formik";
 
-type FieldProps = FieldHookConfig<string> & {label: string, options: {value: string, label: string}[], noValidate?: boolean}
+type FieldProps = FieldHookConfig<string> & {label?: string, options: {value: string, label: string}[], noValidate?: boolean}
 
 const SelectField = ({noValidate, options, label, type, ...props}: FieldProps) => {
   const [field, meta] = useField(props);

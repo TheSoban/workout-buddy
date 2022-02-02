@@ -1,9 +1,10 @@
 import { FieldArray, Form, Formik } from 'formik';
 import { FC, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import * as Yup from 'yup'
 import { ICategory, IEquipment, IMuscle } from '../../../typescript/interfaces';
 import API from '../../../utils/axios';
+import { handleNotificationException, handleNotificationResponse } from '../../../utils/notifications';
 import CheckboxGroup from '../FormComponents/Checkboxes/CheckboxGroup';
 import TextField from '../FormComponents/TextField';
 
@@ -27,6 +28,7 @@ const ExerciseForm: FC<IExerciseFormProps> = ({update, initialData}) => {
   const [categories, setCategories] = useState<ICategory[]>([])
   const [muscles, setMuscles] = useState<IMuscle[]>([])
   const [equipment, setEquipment] = useState<IEquipment[]>([])
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
@@ -50,7 +52,7 @@ const ExerciseForm: FC<IExerciseFormProps> = ({update, initialData}) => {
           setEquipment(equipment);
         }
       } catch (exc) {
-        console.log(exc)
+        handleNotificationException(exc)
       }
       setLoading(false)
     })()
@@ -70,7 +72,7 @@ const ExerciseForm: FC<IExerciseFormProps> = ({update, initialData}) => {
       validationSchema={Yup.object({
         name: Yup.string().min(1).max(50).required("Nazwa jest wymagana"),
         description: Yup.string().min(1).max(300).required("Opis jest wymagane"),
-        images: Yup.array().of(Yup.string().url("Nie podano poprawnego URL").required("Pole jest wymagane jest wymagany"))
+        images: Yup.array().of(Yup.string().url("Nie podano poprawnego URL").required("Pole jest wymagane"))
       })}
       onSubmit={async (values) => {
         console.log(values)
@@ -82,15 +84,16 @@ const ExerciseForm: FC<IExerciseFormProps> = ({update, initialData}) => {
         }
         try {
           if(update) {
-            await API.post(`/exercise/${params.exerciseId}/update`, data);
-            alert('Zaktualizowano');
+            const res = await API.post(`/exercise/${params.exerciseId}/update`, data);
+            handleNotificationResponse(res);
           } else {
-            await API.post('/exercise', data);
-            alert('Dodano');
+            const res = await API.post('/exercise', data);
+            handleNotificationResponse(res)
           }
+          navigate('/panel/moderator/exercises', {replace: true});
           
         } catch (exc) {
-          console.log(exc.response);
+          handleNotificationException(exc);
         }
       }}
     >
@@ -98,7 +101,7 @@ const ExerciseForm: FC<IExerciseFormProps> = ({update, initialData}) => {
         ({handleSubmit, isSubmitting, isValid, dirty, values }) => (
           <Form noValidate onSubmit={(e) => {e.preventDefault();handleSubmit(e)}}>
             <article>
-              <details>
+              <details open>
                 <summary>Dane ćwiczenia</summary>
                 <div className="grid">
                   <TextField label='Nazwa' name="name" />
@@ -119,7 +122,7 @@ const ExerciseForm: FC<IExerciseFormProps> = ({update, initialData}) => {
               <FieldArray
                 name="images"
                 render={arrayHelpers => (
-                  <details>
+                  <details open>
                     <summary>Zdjęcia</summary>
                     <fieldset>
                       <table>

@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { ICategory, IEquipment, IExerciseSearch, IMuscle } from '../../../typescript/interfaces';
 import API from '../../../utils/axios';
+import { handleNotificationException } from '../../../utils/notifications';
 import {ChooseCategories, ChooseEquipment, ChooseMuscles} from './ChooseElements';
 
 export interface IElement<T> {
@@ -48,7 +49,7 @@ const ExerciseSearchForm: FC<IExerciseSearchFormProps> = ({exercises, setExercis
         }
         setLoading(false)
       } catch (exc) {
-        console.log(exc)
+        handleNotificationException(exc)
         setLoading(false)
       }
     })()
@@ -63,7 +64,7 @@ const ExerciseSearchForm: FC<IExerciseSearchFormProps> = ({exercises, setExercis
       const res = await API.get<any>('/exercise', {params: {name: exerciseName, equipment: equipmentIds, categories: categoryIds, muscles: muscleIds}})
       setExercises(res.data.response.exercises);
     } catch(exc) {
-      console.log(exc);
+      handleNotificationException(exc);
     }
   }
 

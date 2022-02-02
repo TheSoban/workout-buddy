@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { TRole } from "../../../store/auth";
 import { IUser } from "../../../typescript/interfaces";
 import API from "../../../utils/axios";
+import { handleNotificationException, handleNotificationResponse } from "../../../utils/notifications";
 
 
 const Admin = () => {
@@ -13,10 +14,11 @@ const Admin = () => {
     const user = users.find((user) => user.user_id === id);
     if(user) {
       try {
-        await API.post(`/admin/user/${id}/update`, {role: user.role, disabled: user.disabled})
+        const res = await API.post(`/admin/user/${id}/update`, {role: user.role, disabled: user.disabled})
+        handleNotificationResponse(res);
         await loadItems();
       } catch (exc) {
-        console.log(exc.response);
+        handleNotificationException(exc);
       }
     }
     setUpdating(false);
@@ -27,7 +29,7 @@ const Admin = () => {
       const res = await API.get<any>('/admin/user');
       setUsers(res.data.response.users);
     } catch (exc) {
-      console.log(exc.response);
+      handleNotificationException(exc);
     }
   }
 

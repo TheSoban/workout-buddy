@@ -1,6 +1,6 @@
 import { FieldHookConfig, useField } from "formik";
 
-type FieldProps = FieldHookConfig<string> & {label: string, min: number, max: number, step: number, noValidate?: boolean}
+type FieldProps = FieldHookConfig<string> & {label?: string, min: number, max: number, step: number, noValidate?: boolean}
 
 const NumberField = ({noValidate, min, max, step, label, type, ...props}: FieldProps) => {
   const [field, meta] = useField(props);

@@ -6,6 +6,8 @@ import DateField from '../FormComponents/DateField';
 import NumberField from '../FormComponents/NumberField';
 import SelectField from '../FormComponents/SelectField';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../store/auth';
+import { handleNotificationException, handleNotificationResponse } from '../../../utils/notifications';
 
 export interface IProfileFormProps {
   dateOfBirth: string;
@@ -23,7 +25,9 @@ const options = [
 ]
 
 const ProfileForm: FC<IProfileFormProps> = ({dateOfBirth, height, sex, setDateOfBirth, setHeight, setSex}) => {
+  const {user, setCompleted} = useAuth();
   const navigate = useNavigate()
+
   return <Formik
       initialValues={{
         dateOfBirth,
@@ -36,17 +40,34 @@ const ProfileForm: FC<IProfileFormProps> = ({dateOfBirth, height, sex, setDateOf
         sex: Yup.mixed().oneOf(["M", "F", "O"], "Musi być spośród dostępnych opcji").required('Płeć jest wymagana')
       })}
       onSubmit={async ({dateOfBirth, sex, height}, formikHelpers) => {
-        try {
-          console.log({dateOfBirth, sex, height})
-          await API.post('/user/profile', {date_of_birth: dateOfBirth, sex, height});
-          setDateOfBirth(dateOfBirth);
-          setHeight(height);
-          setSex(sex);
-          formikHelpers.resetForm({values: {dateOfBirth, height, sex}})
-          navigate('/panel', {replace: true});
-        } catch (exc) {
-          console.log(exc.response)
+        if (!user.completed) {
+          try {
+            console.log({dateOfBirth, sex, height})
+            const res = await API.post('/user/profile', {date_of_birth: dateOfBirth, sex, height});
+            setDateOfBirth(dateOfBirth);
+            setHeight(height);
+            setSex(sex);
+            formikHelpers.resetForm({values: {dateOfBirth, height, sex}})
+            setCompleted();
+            handleNotificationResponse(res)
+            navigate('/panel', {replace: true})
+          } catch (exc) {
+            handleNotificationException(exc)
+          }
+        } else {
+          try {
+            console.log({dateOfBirth, sex, height})
+            const res = await API.post('/user/profile/update', {date_of_birth: dateOfBirth, sex, height});
+            setDateOfBirth(dateOfBirth);
+            setHeight(height);
+            setSex(sex);
+            formikHelpers.resetForm({values: {dateOfBirth, height, sex}})
+            handleNotificationResponse(res)
+          } catch (exc) {
+            handleNotificationException(exc)
+          }
         }
+        
       }}
     >
       {

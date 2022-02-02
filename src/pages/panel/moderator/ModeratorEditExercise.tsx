@@ -3,6 +3,7 @@ import { Navigate, useParams } from 'react-router-dom';
 import ExerciseForm, { IExerciseFormData } from '../../../components/forms/ExerciseForm';
 import { IExercise } from '../../../typescript/interfaces';
 import API from '../../../utils/axios';
+import { handleNotificationException } from '../../../utils/notifications';
 
 const ModeratorEditExercise = () => {
   const [loading, setLoading] = useState(true);
@@ -33,7 +34,7 @@ const ModeratorEditExercise = () => {
         exerciseInitial.images = exercise.images.map(eq => eq.url);
         setExerciseData(exerciseInitial)
       } catch (exc) {
-        console.log(exc.response)
+        handleNotificationException(exc);
       }
       setLoading(false);
     })()

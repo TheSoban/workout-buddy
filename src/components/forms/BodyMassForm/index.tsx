@@ -4,7 +4,8 @@ import * as Yup from 'yup'
 import API from '../../../utils/axios';
 import NumberField from '../FormComponents/NumberField';
 import TextField from '../FormComponents/TextField';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { handleNotificationException, handleNotificationResponse } from '../../../utils/notifications';
 
 export interface IBodyMassFormData {
   weight: number;
@@ -21,6 +22,7 @@ export interface IBodyMassFormProps {
 }
 
 const BodyMassForm: FC<IBodyMassFormProps> = ({initialData, update}) => {
+  const navigate = useNavigate();
   const params = useParams();
   return <Formik<IBodyMassFormData>
       initialValues={
@@ -46,14 +48,15 @@ const BodyMassForm: FC<IBodyMassFormProps> = ({initialData, update}) => {
         const data = {...values}
         try {
           if(update) {
-            await API.post(`/user/body-measurement/${params.measurementId}/update`, data);
-            alert('Zaktualizowano');
+            const res = await API.post(`/user/body-measurement/${params.measurementId}/update`, data);
+            handleNotificationResponse(res);
           } else {
-            await API.post('/user/body-measurement', data);
-            alert('Dodano');
+            const res = await API.post('/user/body-measurement', data);
+            handleNotificationResponse(res);
           }
+          navigate('/panel/body-mass')
         } catch (exc) {
-          console.log(exc.response);
+          handleNotificationException(exc);
         }
       }}
     >

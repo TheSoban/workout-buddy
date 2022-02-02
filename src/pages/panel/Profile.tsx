@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ProfileForm from "../../components/forms/ProfileForm";
 import { useAuth } from "../../store/auth";
 import API from "../../utils/axios";
+import { handleNotificationException } from "../../utils/notifications";
 
 export interface IProfileData {
   date_of_birth: string;
@@ -26,7 +27,7 @@ const Profile = () => {
         setHeight(height);
         setSex(sex);
       } catch (exc) {
-        console.log(exc)
+        handleNotificationException(exc);
       }
       setLoading(false);
     })()
